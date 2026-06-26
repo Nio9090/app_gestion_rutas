@@ -7,9 +7,7 @@ const almacen = localforage.createInstance({
 
 // TODAS LAS 44 COMUNIDADES DE PEDERNALES
 const DATOS_INICIALES = [
-  // ==========================================
-  // CATEGORÍA: URBANO (5)
-  // ==========================================
+  // URBANO (5)
   {
     id: '1',
     nombre: 'Pedernales (Centro)',
@@ -70,10 +68,7 @@ const DATOS_INICIALES = [
     tipo: 'urbano',
     direccion: 'Calle Miraflores, Pedernales'
   },
-
-  // ==========================================
-  // CATEGORÍA: PLAYA (6)
-  // ==========================================
+  // PLAYA (6)
   {
     id: '6',
     nombre: 'Cojimies',
@@ -146,10 +141,7 @@ const DATOS_INICIALES = [
     tipo: 'costera',
     direccion: 'Vía El Morro, Pedernales'
   },
-
-  // ==========================================
-  // CATEGORÍA: MONTAÑA (5)
-  // ==========================================
+  // MONTAÑA (5)
   {
     id: '12',
     nombre: 'Cerro de Hojas',
@@ -210,10 +202,7 @@ const DATOS_INICIALES = [
     tipo: 'rural',
     direccion: 'Vía El Mirador, Pedernales'
   },
-
-  // ==========================================
-  // CATEGORÍA: RÍO (3)
-  // ==========================================
+  // RIO (3)
   {
     id: '17',
     nombre: 'Río Pedernales',
@@ -250,10 +239,7 @@ const DATOS_INICIALES = [
     tipo: 'turístico',
     direccion: 'Vía Cascada El Salto, Pedernales'
   },
-
-  // ==========================================
-  // CATEGORÍA: CULTURA (4)
-  // ==========================================
+  // CULTURA (4)
   {
     id: '20',
     nombre: 'Río Verde',
@@ -302,10 +288,7 @@ const DATOS_INICIALES = [
     tipo: 'rural',
     direccion: 'Vía El Rosario, Pedernales'
   },
-
-  // ==========================================
-  // CATEGORÍA: NATURALEZA (5)
-  // ==========================================
+  // NATURALEZA (5)
   {
     id: '24',
     nombre: 'Boca de Cojimies',
@@ -366,10 +349,7 @@ const DATOS_INICIALES = [
     tipo: 'turístico',
     direccion: 'Vía Laguna de Pedernales'
   },
-
-  // ==========================================
-  // CATEGORÍA: RURAL (16)
-  // ==========================================
+  // RURAL (16)
   {
     id: '29',
     nombre: 'El Matal',
@@ -564,11 +544,9 @@ const DATOS_INICIALES = [
   }
 ];
 
-// Variable para controlar la inicialización
 let datosInicializados = false;
 
 export const lugaresService = {
-  // Función para reiniciar los datos (útil para pruebas)
   async reiniciarDatos() {
     try {
       await almacen.setItem('lugares', DATOS_INICIALES);
@@ -590,9 +568,7 @@ export const lugaresService = {
           await almacen.setItem('lugares', DATOS_INICIALES);
           await almacen.setItem('inicializado', true);
           console.log('✅ 44 comunidades de Pedernales cargadas correctamente');
-          console.log(`📊 Categorías: Urbano (5), Playa (6), Montaña (5), Río (3), Cultura (4), Naturaleza (5), Rural (16)`);
         } else {
-          // Verificar que los datos existen
           const datos = await almacen.getItem('lugares');
           if (!datos || datos.length === 0) {
             await almacen.setItem('lugares', DATOS_INICIALES);
@@ -602,7 +578,6 @@ export const lugaresService = {
         datosInicializados = true;
       } catch (error) {
         console.error('Error inicializando almacen:', error);
-        // Intentar recuperar
         try {
           await almacen.setItem('lugares', DATOS_INICIALES);
           await almacen.setItem('inicializado', true);
@@ -619,7 +594,6 @@ export const lugaresService = {
     try {
       const lugares = await almacen.getItem('lugares');
       if (!lugares || lugares.length === 0) {
-        // Si no hay datos, cargar los iniciales
         await almacen.setItem('lugares', DATOS_INICIALES);
         return DATOS_INICIALES;
       }
