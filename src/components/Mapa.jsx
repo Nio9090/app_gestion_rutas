@@ -2,18 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Configurar iconos de Leaflet
+// SOLUCIÓN DEFINITIVA PARA ICONOS DE LEAFLET EN GITHUB PAGES
 delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+
+// Usar CDN para los iconos
+const iconoVisitado = new L.Icon({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-});
-
-// Icono para lugares visitados (VERDE)
-const iconoVisitado = new L.Icon({
-  iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -21,10 +16,9 @@ const iconoVisitado = new L.Icon({
   className: 'marcador-visitado'
 });
 
-// Icono para lugares NO visitados (ROJO)
 const iconoNoVisitado = new L.Icon({
-  iconUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -50,26 +44,22 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
   const markersRef = useRef({});
   const mapContainerRef = useRef(null);
   const userMarkerRef = useRef(null);
-  const [ubicacionUsuario, setUbicacionUsuario] = useState(null);
   const [buscandoUbicacion, setBuscandoUbicacion] = useState(false);
 
   const PEDERNALES = { lat: 0.0671, lng: -80.0515 };
 
-  // Contar visitados para mostrar en la leyenda
-  const lugaresVisitados = lugares.filter(l => l.visitado).length;
-  const lugaresPendientes = lugares.length - lugaresVisitados;
-  const porcentaje = lugares.length > 0 ? Math.round((lugaresVisitados / lugares.length) * 100) : 0;
+  // Contar visitados
+  const lugaresVisitados = lugares?.filter(l => l.visitado).length || 0;
+  const lugaresPendientes = (lugares?.length || 0) - lugaresVisitados;
+  const porcentaje = lugares?.length > 0 ? Math.round((lugaresVisitados / lugares.length) * 100) : 0;
 
-  // Obtener ubicación del usuario
   const obtenerUbicacion = () => {
     setBuscandoUbicacion(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setUbicacionUsuario({ lat: latitude, lng: longitude });
           setBuscandoUbicacion(false);
-          
           if (mapRef.current) {
             mapRef.current.setView([latitude, longitude], 14);
             if (userMarkerRef.current) {
@@ -84,8 +74,7 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
               .openPopup();
           }
         },
-        (error) => {
-          console.error('Error obteniendo ubicación:', error);
+        () => {
           setBuscandoUbicacion(false);
           if (mapRef.current) {
             mapRef.current.setView([PEDERNALES.lat, PEDERNALES.lng], 11);
@@ -112,16 +101,12 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
       mapRef.current = L.map(mapContainerRef.current, {
         center: [PEDERNALES.lat, PEDERNALES.lng],
         zoom: 11,
-        zoomControl: true,
-        fadeAnimation: true,
-        attributionControl: true
+        zoomControl: true
       });
 
-      // Tiles de OpenStreetMap
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
-        maxZoom: 19,
-        minZoom: 8
+        maxZoom: 19
       }).addTo(mapRef.current);
 
       // Control de geolocalización
@@ -150,7 +135,7 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
       };
       controlGeoloc.addTo(mapRef.current);
 
-      // LEYENDA MEJORADA con contadores
+      // Leyenda
       const legend = L.control({ position: 'bottomright' });
       legend.onAdd = function() {
         const div = L.DomUtil.create('div', 'map-legend');
@@ -174,16 +159,12 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
               <span style="color: #ff4444; font-size: 20px;">📍</span>
               <span>Pendientes: <strong style="color: #ff4444;">${lugaresPendientes}</strong></span>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-              <span style="color: #2196F3; font-size: 20px;">🔵</span>
-              <span>Tu ubicación</span>
-            </div>
             <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee; text-align: center;">
               <div style="background: #e0e0e0; height: 6px; border-radius: 3px; overflow: hidden;">
                 <div style="background: #4CAF50; height: 100%; width: ${porcentaje}%; transition: width 0.5s ease;"></div>
               </div>
               <div style="font-size: 11px; color: #666; margin-top: 4px;">
-                ${porcentaje}% completado (${lugaresVisitados}/${lugares.length})
+                ${porcentaje}% completado (${lugaresVisitados}/${lugares?.length || 0})
               </div>
             </div>
           </div>
@@ -211,8 +192,8 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
     });
     markersRef.current = {};
 
-    // Agregar marcadores de lugares con colores según visitado
-    lugares.forEach(lugar => {
+    // Agregar marcadores
+    lugares?.forEach(lugar => {
       if (lugar.lat && lugar.lng) {
         const icon = lugar.visitado ? iconoVisitado : iconoNoVisitado;
         const marker = L.marker([lugar.lat, lugar.lng], { 
@@ -240,10 +221,7 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
                 ${lugar.visitado ? '✅ Ya visitado' : '⏳ Pendiente por visitar'}
               </div>
             </div>
-          `, {
-            maxWidth: 300,
-            className: 'popup-lugar'
-          });
+          `);
 
         marker.on('click', () => {
           onLugarClick(lugar);
@@ -253,7 +231,7 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
       }
     });
 
-    // Si hay lugar seleccionado, centrar y abrir popup
+    // Lugar seleccionado
     if (lugarSeleccionado && lugarSeleccionado.lat && lugarSeleccionado.lng) {
       mapRef.current.setView(
         [lugarSeleccionado.lat, lugarSeleccionado.lng], 
@@ -277,10 +255,10 @@ function Mapa({ lugares, lugarSeleccionado, onLugarClick, onMarcarVisitado }) {
     };
   }, [lugares, lugarSeleccionado, onLugarClick]);
 
-  // Funciones globales para los popups
+  // Funciones globales
   useEffect(() => {
     window.selectLugar = (id) => {
-      const lugar = lugares.find(l => l.id === id);
+      const lugar = lugares?.find(l => l.id === id);
       if (lugar) {
         onLugarClick(lugar);
       }
