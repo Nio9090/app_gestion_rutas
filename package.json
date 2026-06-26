@@ -1,0 +1,36 @@
+{
+  "name": "app_gestion_rutas",
+  "private": true,
+  "version": "0.0.0",
+  "homepage": "https://Nio9090.github.io/https://github.com/Nio9090/app_gestion_rutas",
+  "type": "module",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "dependencies": {
+    "@react-leaflet/core": "^3.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet-geosearch": "^4.4.0",
+    "localforage": "^1.10.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-leaflet": "^5.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "eslint": "^10.5.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "gh-pages": "^6.3.0",
+    "globals": "^17.6.0",
+    "vite": "^8.1.0"
+  }
+}

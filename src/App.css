@@ -1,0 +1,1458 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f5f5;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #1a3a5c, #2d5a8a);
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.app-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-agregar {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-agregar:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.contador {
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.app-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 380px;
+  min-width: 380px;
+  background: white;
+  overflow-y: auto;
+  padding: 15px;
+  border-right: 1px solid #ddd;
+  height: 100%;
+}
+
+.map-container {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  background: #e0e0e0;
+}
+
+/* Lista de Lugares */
+.lista-lugares {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.filtros {
+  margin-bottom: 15px;
+  flex-shrink: 0;
+}
+
+.input-busqueda {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-busqueda:focus {
+  border-color: #2d5a8a;
+}
+
+.lista {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.item-lugar {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.item-lugar:hover {
+  background: #e9ecef;
+  border-color: #2d5a8a;
+  transform: translateX(5px);
+}
+
+.item-icon {
+  font-size: 24px;
+  width: 40px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-info h3 {
+  color: #1a3a5c;
+  margin: 0 0 3px 0;
+  font-size: 15px;
+}
+
+.item-info p {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-comunidad {
+  display: inline-block;
+  background: #2d5a8a;
+  color: white;
+  padding: 1px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.sin-resultados {
+  text-align: center;
+  color: #999;
+  padding: 40px 0;
+}
+
+/* Formulario */
+.formulario-lugar {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.formulario-lugar h2 {
+  color: #1a3a5c;
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.campo {
+  margin-bottom: 12px;
+}
+
+.campo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.campo label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+.campo input,
+.campo textarea,
+.campo select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  background: white;
+}
+
+.campo input:focus,
+.campo textarea:focus,
+.campo select:focus {
+  outline: none;
+  border-color: #2d5a8a;
+}
+
+.acciones-formulario {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-guardar,
+.btn-cancelar {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-guardar {
+  background: #4CAF50;
+  color: white;
+  flex: 1;
+}
+
+.btn-guardar:hover {
+  background: #45a049;
+}
+
+.btn-cancelar {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-cancelar:hover {
+  background: #c82333;
+}
+
+/* Detalle */
+.detalle-lugar {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 15px;
+}
+
+.detalle-header h2 {
+  color: #1a3a5c;
+  font-size: 18px;
+  margin: 0;
+}
+
+.btn-cerrar {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.btn-cerrar:hover {
+  color: #333;
+}
+
+.detalle-seccion {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.detalle-seccion:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.detalle-seccion h3 {
+  color: #666;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin: 0 0 3px 0;
+}
+
+.detalle-seccion p {
+  color: #333;
+  font-size: 14px;
+  margin: 0;
+}
+
+.detalle-acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #ddd;
+}
+
+.btn-editar,
+.btn-eliminar {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  flex: 1;
+  font-size: 14px;
+}
+
+.btn-editar {
+  background: #ffc107;
+  color: #333;
+}
+
+.btn-editar:hover {
+  background: #e0a800;
+}
+
+.btn-eliminar {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: #c82333;
+}
+
+/* Estados de carga y error */
+.cargando-inicial,
+.error-inicial {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 20px;
+  color: #333;
+}
+
+.error-inicial {
+  color: #dc3545;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar,
+.lista::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.lista::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.lista::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.lista::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Agregar al final del archivo App.css */
+
+/* Estilos para los marcadores */
+.marcador-visitado {
+  filter: hue-rotate(120deg) brightness(1.1);
+}
+
+.marcador-no-visitado {
+  filter: hue-rotate(0deg) brightness(0.9);
+}
+
+/* Control de geolocalización */
+.control-geoloc {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.control-geoloc button {
+  transition: all 0.3s ease;
+}
+
+.control-geoloc button:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+
+/* Popups mejorados */
+.popup-lugar .leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+}
+
+.popup-lugar .leaflet-popup-tip {
+  background: white;
+}
+
+/* Botón de estadísticas */
+.btn-estadisticas {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-estadisticas:hover {
+  background: #f57c00;
+  transform: scale(1.05);
+}
+
+.btn-estadisticas.active {
+  background: #e65100;
+}
+
+/* Estadísticas en detalle */
+.detalle-estado-visita {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.estado-visita {
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.estado-visita.visitado {
+  background: #c8e6c9;
+  color: #2e7d32;
+}
+
+.estado-visita.no-visitado {
+  background: #ffcdd2;
+  color: #c62828;
+}
+
+.btn-marcar-visita {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 13px;
+}
+
+.btn-marcar-visita.marcar {
+  background: #4CAF50;
+  color: white;
+}
+
+.btn-marcar-visita.marcar:hover {
+  background: #388E3C;
+}
+
+.btn-marcar-visita.desmarcar {
+  background: #ff9800;
+  color: white;
+}
+
+.btn-marcar-visita.desmarcar:hover {
+  background: #f57c00;
+}
+
+/* Estadísticas mejoradas */
+.estadisticas-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+.estadisticas-header {
+  background: linear-gradient(135deg, #1a3a5c, #2d5a8a);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.estadisticas-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.estadisticas-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.estadistica-item {
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.estadistica-item .estadistica-numero {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.estadistica-item .estadistica-label {
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.progreso-barra {
+  background: #e0e0e0;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progreso-lleno {
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  transition: width 0.5s ease;
+  font-size: 13px;
+}
+
+
+/* Agregar al final del archivo App.css */
+
+/* Contador de lugares */
+.contador-lugares {
+  font-size: 12px;
+  color: #666;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Selectores de filtro mejorados */
+.select-filtro {
+  padding: 8px 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 13px;
+  background: white;
+  width: 100%;
+  margin-top: 5px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.select-filtro:focus {
+  outline: none;
+  border-color: #2d5a8a;
+}
+
+/* Items de lugar mejorados */
+.item-lugar {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.item-lugar:hover {
+  background: #e9ecef;
+  border-color: #2d5a8a;
+  transform: translateX(5px);
+}
+
+.item-lugar.visitado {
+  background: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+}
+
+.item-lugar:not(.visitado) {
+  border-left: 4px solid #ff9800;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.item-header h3 {
+  color: #1a3a5c;
+  margin: 0;
+  font-size: 15px;
+  flex: 1;
+}
+
+.item-estado {
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+.item-info p {
+  color: #666;
+  font-size: 13px;
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.item-comunidad {
+  display: inline-block;
+  background: #2d5a8a;
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+
+.item-categoria {
+  display: inline-block;
+  background: #e0e0e0;
+  color: #333;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+
+/* Agregar al final del archivo App.css */
+
+/* Grupos de categorías */
+.categoria-grupo {
+  margin-bottom: 15px;
+}
+
+.categoria-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f4f8;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 4px solid #2d5a8a;
+}
+
+.categoria-icono {
+  font-size: 20px;
+}
+
+.categoria-nombre {
+  font-weight: 600;
+  color: #1a3a5c;
+  font-size: 14px;
+  flex: 1;
+}
+
+.categoria-contador {
+  font-size: 12px;
+  color: #666;
+  background: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+/* Filtros mejorados */
+.filtros {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.input-busqueda {
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.input-busqueda:focus {
+  border-color: #2d5a8a;
+}
+
+.select-filtro {
+  padding: 8px 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 13px;
+  background: white;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.select-filtro:focus {
+  outline: none;
+  border-color: #2d5a8a;
+}
+
+/* Contador de lugares */
+.contador-lugares {
+  font-size: 12px;
+  color: #666;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Items de lugar mejorados */
+.item-lugar {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  border-left: 4px solid #ff9800;
+}
+
+.item-lugar:hover {
+  background: #e9ecef;
+  border-color: #2d5a8a;
+  transform: translateX(5px);
+}
+
+.item-lugar.visitado {
+  background: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+}
+
+.item-lugar:not(.visitado) {
+  border-left: 4px solid #ff9800;
+}
+
+.item-icon {
+  font-size: 20px;
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.item-header h3 {
+  color: #1a3a5c;
+  margin: 0;
+  font-size: 14px;
+  flex: 1;
+}
+
+.item-estado {
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.item-info p {
+  color: #666;
+  font-size: 12px;
+  margin: 3px 0;
+  line-height: 1.3;
+}
+
+.item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.item-comunidad {
+  display: inline-block;
+  background: #2d5a8a;
+  color: white;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+.item-tipo {
+  display: inline-block;
+  background: #e0e0e0;
+  color: #333;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+/* Sin resultados */
+.sin-resultados {
+  text-align: center;
+  color: #999;
+  padding: 40px 0;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .categoria-header {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .categoria-nombre {
+    font-size: 12px;
+  }
+
+  .item-lugar {
+    padding: 8px 10px;
+  }
+
+  .item-header h3 {
+    font-size: 13px;
+  }
+
+  .item-info p {
+    font-size: 11px;
+  }
+
+  .item-tags {
+    gap: 3px;
+  }
+
+  .item-comunidad,
+  .item-tipo {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+}
+
+/* Scrollbar personalizada */
+.lista::-webkit-scrollbar {
+  width: 5px;
+}
+
+.lista::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.lista::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.lista::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Scrollbar para la lista */
+.lista::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.lista::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.lista::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Agregar al final del archivo App.css */
+
+/* ========== RESUMEN DE VISITAS EN LA LISTA ========== */
+.resumen-visitas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.resumen-item {
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  background: white;
+}
+
+.resumen-item .resumen-numero {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1a3a5c;
+}
+
+.resumen-item .resumen-label {
+  font-size: 10px;
+  color: #666;
+}
+
+.resumen-item.visitado .resumen-numero {
+  color: #4CAF50;
+}
+
+.resumen-item.pendiente .resumen-numero {
+  color: #ff9800;
+}
+
+.resumen-item.porcentaje .resumen-numero {
+  color: #2d5a8a;
+}
+
+/* Barra de progreso en la lista */
+.barra-progreso-lista {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.barra-lleno {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  transition: width 0.5s ease;
+  border-radius: 3px;
+}
+
+/* ========== ESTADÍSTICAS MEJORADAS ========== */
+.estadisticas-numeros-grandes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.numero-grande {
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.numero-grande .numero {
+  display: block;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+}
+
+.numero-grande .label {
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.numero-grande.pendiente .numero {
+  color: #ffb74d;
+}
+
+.numero-grande.total .numero {
+  color: #90caf9;
+}
+
+.resumen-rapido {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.9;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Estadísticas por categoría */
+.estadisticas-categorias {
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 10px 0;
+  border: 1px solid #e0e0e0;
+}
+
+.estadisticas-categorias h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #1a3a5c;
+}
+
+.categorias-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.categoria-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.categoria-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  min-width: 100px;
+}
+
+.categoria-nombre {
+  color: #333;
+}
+
+.categoria-conteo {
+  color: #666;
+  font-weight: 600;
+}
+
+.categoria-barra {
+  flex: 2;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.categoria-progreso {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  transition: width 0.5s ease;
+  border-radius: 4px;
+}
+
+.categoria-porcentaje {
+  font-size: 11px;
+  color: #666;
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Comunidades en estadísticas */
+.comunidades-lista h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #1a3a5c;
+  margin: 0 0 10px 0;
+}
+
+.comunidades-resumen {
+  font-size: 12px;
+  color: #666;
+  font-weight: normal;
+}
+
+.comunidad-item {
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.comunidad-item:hover {
+  transform: translateX(5px);
+  border-color: #2d5a8a;
+}
+
+.comunidad-item.visitado {
+  background: #e8f5e9;
+}
+
+.comunidad-item.no-visitado {
+  background: #f5f5f5;
+}
+
+.comunidad-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.comunidad-nombre {
+  font-weight: 500;
+}
+
+.comunidad-lugares {
+  font-size: 11px;
+  color: #666;
+}
+
+.estado-verde {
+  color: #4CAF50;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.estado-rojo {
+  color: #ff9800;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ========== LEYENDA DEL MAPA ========== */
+.map-legend {
+  background: white;
+  padding: 12px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  font-size: 13px;
+  min-width: 180px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .resumen-visitas {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .resumen-item .resumen-numero {
+    font-size: 16px;
+  }
+
+  .resumen-item .resumen-label {
+    font-size: 9px;
+  }
+
+  .estadisticas-numeros-grandes {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  .numero-grande .numero {
+    font-size: 22px;
+  }
+
+  .numero-grande .label {
+    font-size: 10px;
+  }
+
+  .resumen-rapido {
+    font-size: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .categoria-item {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .categoria-info {
+    min-width: 80px;
+    font-size: 11px;
+  }
+
+  .categoria-barra {
+    flex: 1;
+    height: 6px;
+  }
+
+  .categoria-porcentaje {
+    font-size: 10px;
+    min-width: 30px;
+  }
+
+  .comunidad-item {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .comunidad-nombre {
+    font-size: 12px;
+  }
+
+  .comunidad-lugares {
+    font-size: 10px;
+  }
+
+  .map-legend {
+    font-size: 11px;
+    padding: 8px 10px;
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .resumen-visitas {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+  }
+
+  .resumen-item {
+    padding: 3px;
+  }
+
+  .resumen-item .resumen-numero {
+    font-size: 14px;
+  }
+
+  .estadisticas-numeros-grandes {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .numero-grande .numero {
+    font-size: 18px;
+  }
+
+  .categoria-info {
+    min-width: 60px;
+    font-size: 10px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .item-lugar {
+    padding: 10px 12px;
+  }
+
+  .item-header h3 {
+    font-size: 14px;
+  }
+
+  .item-info p {
+    font-size: 12px;
+  }
+
+  .item-tags {
+    flex-wrap: wrap;
+  }
+
+  .item-comunidad,
+  .item-categoria {
+    font-size: 10px;
+    padding: 1px 8px;
+  }
+}
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .app-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-estadisticas,
+  .btn-agregar {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .estadisticas-resumen {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  .estadistica-item .estadistica-numero {
+    font-size: 18px;
+  }
+
+  .estadistica-item .estadistica-label {
+    font-size: 10px;
+  }
+
+  .detalle-estado-visita {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .control-geoloc button {
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+  }
+
+  .control-geoloc button span:last-child {
+    display: none;
+  }
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.marcador-visitado,
+.marcador-no-visitado {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 320px;
+    min-width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-height: 45vh;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .map-container {
+    height: 55vh;
+  }
+  
+  .app-header {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 15px;
+  }
+  
+  .app-header h1 {
+    font-size: 16px;
+  }
+
+  .btn-agregar {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .campo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Leaflet popup button fix */
+.leaflet-popup-content button {
+  background: #2d5a8a;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.leaflet-popup-content button:hover {
+  background: #1a3a5c;
+}
+
