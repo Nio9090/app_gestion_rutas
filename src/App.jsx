@@ -25,25 +25,33 @@ function App() {
       setCargando(true);
       setError(null);
       const datos = await lugaresService.obtenerTodos();
-      console.log('📊 Lugares cargados:', datos.length);
-      setLugares(datos);
+      console.log('📊 Lugares cargados:', datos?.length || 0);
+      setLugares(datos || []);
     } catch (err) {
       console.error('Error cargando lugares:', err);
       setError('Error al cargar los lugares');
+      // Intentar recargar datos iniciales
+      try {
+        const datosIniciales = await lugaresService.reiniciarDatos();
+        setLugares(datosIniciales || []);
+        setError(null);
+      } catch (e) {
+        console.error('Error al reiniciar datos:', e);
+      }
     } finally {
       setCargando(false);
     }
   };
 
-  // Función para reiniciar datos (solo para pruebas)
   const reiniciarDatos = async () => {
     if (window.confirm('¿Reiniciar todos los datos a los valores iniciales?')) {
       try {
-        await lugaresService.reiniciarDatos();
-        await cargarLugares();
+        const datos = await lugaresService.reiniciarDatos();
+        setLugares(datos || []);
         alert('✅ Datos reiniciados correctamente');
       } catch (err) {
         alert('❌ Error al reiniciar datos');
+        console.error(err);
       }
     }
   };
@@ -105,12 +113,25 @@ function App() {
     }
   };
 
+  // Mostrar estado de carga
   if (cargando) {
-    return <div className="cargando-inicial">Cargando aplicación...</div>;
+    return (
+      <div className="cargando-inicial">
+        <div className="spinner"></div>
+        <p>Cargando aplicación...</p>
+      </div>
+    );
   }
 
+  // Mostrar error
   if (error) {
-    return <div className="error-inicial">Error: {error}</div>;
+    return (
+      <div className="error-inicial">
+        <h2>❌ Error</h2>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Recargar</button>
+      </div>
+    );
   }
 
   return (
@@ -142,7 +163,7 @@ function App() {
             + Agregar Lugar
           </button>
           <span className="contador">
-            {lugares.length} lugares
+            {lugares?.length || 0} lugares
           </span>
         </div>
       </header>
@@ -183,7 +204,7 @@ function App() {
                     />
                   ) : (
                     <ListaLugares 
-                      lugares={lugares}
+                      lugares={lugares || []}
                       onSeleccionar={setLugarSeleccionado}
                     />
                   )}
@@ -195,7 +216,7 @@ function App() {
 
         <section className="map-container">
           <Mapa 
-            lugares={lugares}
+            lugares={lugares || []}
             lugarSeleccionado={lugarSeleccionado}
             onLugarClick={setLugarSeleccionado}
             onMarcarVisitado={marcarVisitado}
